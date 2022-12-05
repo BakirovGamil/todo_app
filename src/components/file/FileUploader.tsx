@@ -5,7 +5,7 @@ import { generateID } from '../../lib/todo';
 import { IFile } from '../../types/types';
 import Button from '../UI/button/Button';
 
-const client = filestack.init(process.env.filestackApiKey as string);
+const client = filestack.init(process.env.FILESTACK_KEY as string);
 
 const FileUploader = () => {
   const selectedTaskId = useTypedSelector((state) => state.tasks.selectedTaskId);

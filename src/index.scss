@@ -734,30 +734,11 @@ html, body, #root, .App {
 
   &__name {
     text-align: center;
-    height: 30px;
+    height: 35px;
     overflow: hidden;
     text-overflow: ellipsis;
     width: 60px;
     word-wrap: break-word;
-
-    &:hover {
-      + .file__nameTip {
-        display: block;
-      }
-    }
-  }
-
-  &__nameTip {
-    display: none;
-    position: fixed;
-    z-index: 10000;
-    left: 0;
-    top: 50%;
-    background-color: rgb(255, 167, 44);
-    padding: 3px;
-    border-radius: 5px;
-    word-wrap: break-word;
-    width: 200px;
   }
 
   &__link {
