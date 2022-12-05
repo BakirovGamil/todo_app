@@ -29,9 +29,11 @@ const TaskForm: FC<TaskProps> = ({ initTask, onSave }) => {
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if(!title.trim()) return;
     
     const resultTask: ITask = {...initTask};
-    resultTask.id = generateID();
+    resultTask.id = initTask.id || generateID();
     resultTask.title = title;
     resultTask.priority = priority;
     resultTask.desription = editorRef.current.getContent();

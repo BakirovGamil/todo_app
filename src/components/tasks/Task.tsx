@@ -1,8 +1,11 @@
-import { FC, MouseEvent, useMemo } from 'react';
+import { FC, MouseEvent, useMemo, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { useTaskActions } from '../../hooks/useActions';
 import { useSubtasks } from '../../hooks/useSubtasks';
 import { ITask } from '../../types/types';
+import DropDown from '../UI/drop-down/DropDown';
+import Modal from '../UI/modal/Modal';
+import EditTaskForm from './EditTaskForm';
 import Priority from './Priority';
 
 interface TaskProps {
@@ -23,6 +26,15 @@ const Task: FC<TaskProps> = ({ task, index }) => {
     return subTasks.filter((subTask) => subTask.isDone).length;
   }, [subTasks]);
 
+  const [isVisibleEditModal, setIsVisibleEditModal] = useState(false);
+  const openEditModal = () => setIsVisibleEditModal(true);
+
+  const { editTask } = useTaskActions();
+  const onEdit = (resultTask: ITask) => {
+    editTask(resultTask);
+    setIsVisibleEditModal(false);
+  };
+
   return (
     <Draggable draggableId={task.id} index={index}>
       {(provided) => {
@@ -33,7 +45,15 @@ const Task: FC<TaskProps> = ({ task, index }) => {
                 <Priority task={task}/>
                 {task.title}
               </div>
-              <div className="task__drag" {...provided.dragHandleProps} onClick={(e) => e.stopPropagation()}>
+              <div style={{display: 'flex', gap: 5}}>
+                <Modal isVisible={isVisibleEditModal} setIsVisible={setIsVisibleEditModal} title="Изменить задачу" preload>
+                  <EditTaskForm task={task} onEdit={onEdit}/>
+                </Modal>
+                <DropDown>
+                  <button className="editTask__btn" onClick={() => openEditModal()}>Изменить</button>
+                </DropDown>
+                <div className="task__drag" {...provided.dragHandleProps} onClick={(e) => e.stopPropagation()}>
+                </div>
               </div>
             </div>
             <div className="task__description" dangerouslySetInnerHTML={{__html: task.desription}}/>
