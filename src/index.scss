@@ -1,0 +1,766 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  font-size: inherit;
+}
+
+button {
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  border-radius: 5px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+
+$containerBackground: rgb(51 51 54);
+$bodyBackground: rgb(34 34 38);
+$hoverColor: rgb(85 85 86);
+$hoverColor2: rgba(65,119,244,255);
+$hoverColor3: rgb(110, 110, 110);
+
+$queueLineColor: rgb(83,140,183);
+$developmentLineColor: rgb(63,163,175);
+$doneLineColor: rgb(152,179,118);
+
+$highPriorityColor: rgb(218,64,51);
+$mediumPriorityColor: rgb(251,209,5);
+$lowPriorityColor: rgb(127,205,74);
+
+html, body, #root, .App {
+  background-color: $bodyBackground;
+  color: rgb(255, 255, 255);
+  font-size: 14px;
+  font-family: 'Montserrat', sans-serif;
+  height: 100%;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background-color: $containerBackground;
+  padding: 10px 20px; 
+
+  &__list {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  &__sideNavBtn {
+    font-size: 1.5rem;
+    color: white;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $hoverColor;
+    }
+  }
+}
+
+.wrapper {
+  flex: 1 1 auto;
+  display: flex;
+  position: relative;
+}
+
+.main {
+  flex: 1 1 auto;
+  padding: 20px;
+}
+
+.menu {
+  overflow: hidden;
+  width: auto;
+  transition: all 200ms;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 0;
+  opacity: 0;
+  visibility: hidden;
+  
+  &_active {
+    min-width: 250px;
+    max-width: 250px;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &__nav {
+    padding: 20px 10px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+
+    border-radius: 2px;
+    transition: all 200ms;
+    margin: 0 0 5px 0;
+
+    &:hover {
+      background-color: $hoverColor;
+    }
+
+    &:last-child {
+      margin: 0;
+    }
+
+    a {
+      padding: 8px 0;
+      flex: 1 1 auto;
+    }
+  }
+
+  &__addBtn {
+    padding: 5px 10px;
+
+    &:hover {
+      background-color: $hoverColor3;
+    }
+  }
+
+  &__countTasks {
+    display: block;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    opacity: 0.5;
+  }
+
+  &__closeBtn {
+    visibility: hidden;
+    border-radius: 0;
+    transition: background-color 2s, opacity 2s;
+    opacity: 0;
+  }
+
+  &__projectLink {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.projects {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  &__list {
+    background-color: $containerBackground;
+    border-radius: 2px;
+    min-width: 500px;
+    max-width: 600px;
+    padding: 20px;
+  }
+
+  &__item {
+    margin: 0 0 5px 0;
+    padding: 8px;
+    cursor: pointer;
+
+    &:last-child {
+      margin: 0;
+    }
+
+    &:hover {
+      background-color: $hoverColor;
+      border-radius: 2px;
+    }
+  }
+
+  &__title {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0 5px 0;
+  }
+
+  &__timeEdited {
+    opacity: 0.7;
+    font-size: 0.775rem;
+    text-align: right;
+  }
+
+  &__btn {
+    cursor: pointer;
+    color: white;
+    font-size: 1rem;
+    background-color: transparent;
+    border: none;
+    padding: 5px 8px;
+    text-align: left;
+
+    &:hover {
+      background-color: $hoverColor2;
+    }
+  }
+}
+
+.title {
+  font-size: 1.2rem;
+}
+
+.tasks {
+  &__lists {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+}
+
+@mixin taskListLine($lineColor) {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: $lineColor;
+}
+
+.taskList {
+  background-color: $containerBackground;
+  border-radius: 2px;
+  min-width: 300px;
+  width: 32%;
+
+  &__title {
+    font-size: 1.3rem;
+    padding: 8px;
+    position: relative;
+  }
+
+  &__count {
+    margin: 0 0 0 10px;
+    opacity: 0.5;
+    font-size: 0.8rem;
+  }
+
+  &__title.queue {
+    &::after {
+      @include taskListLine($queueLineColor);
+    }
+  }
+
+  &__title.development {
+    &::after {
+      @include taskListLine($developmentLineColor);
+    }
+  }
+
+  &__title.done {
+    &::after {
+      @include taskListLine($doneLineColor);
+    }
+  }
+
+  &__body {
+    padding: 12px;
+  }
+
+  &__addBtn {
+    color: rgb(79,131,255);
+    background-color: $containerBackground;
+    box-shadow: 0 2px 5px -4px $hoverColor;
+    border: none;
+    outline: none;
+    display: block;
+    padding: 15px 8px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    margin: 0 0 10px 0;
+  }
+}
+
+@mixin date {
+  opacity: 0.7;
+  font-size: 0.875rem;
+}
+
+.task {
+  background-color: $containerBackground;
+  box-shadow: 0 2px 5px -4px $hoverColor;
+  border-radius: 2px;
+  padding: 8px;
+  margin: 0 0 2px 0;
+  cursor: pointer;
+  height: 90px;
+
+  &__priority {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+
+    &_high {
+      background-color: $highPriorityColor;
+    }
+    
+    &_medium {
+      background-color: $mediumPriorityColor;
+    }
+
+    &_low {
+      background-color: $lowPriorityColor;
+    }
+  }
+
+  &__description {
+    padding: 10px 8px;
+    > * {
+      white-space: nowrap;
+      width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    
+    
+
+    ul, ol {
+      margin: 0 0 0 20px;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 8px;
+  }
+
+  &__subtasks, &__dateCreated {
+    @include date;
+  }
+
+  &__dateCreated {
+    text-align: right;
+    flex: 1 1 auto;
+  }
+
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__drag {
+    background-color: rgb(95, 95, 199);
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+  }
+}
+
+.taskForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 500px;
+
+  &__title {
+    margin: 0 0 12px 0;
+  }
+
+  &__priority {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__select {
+    padding: 3px 8px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    border: 1px solid rgb(153 153 153);
+    background-color: rgb(68 68 70);
+    outline: none;
+    cursor: pointer;
+    color: #e1e3e6; 
+  }
+}
+
+.addProjectForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.taskModal {
+  max-width: 500px;
+  flex: 1 1 auto;
+  overflow: auto;
+
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__section {
+    background-color: $containerBackground;
+    padding: 8px;
+    border-radius: 5px;
+  }
+
+  &__content {
+    padding: 5px;
+  }
+
+  &__title {
+    margin: 0 0 8px 0;
+  }
+
+  &__subTasks {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__description {
+    ol, ul {
+      margin: 0 0 0 20px;
+    }
+  }
+
+  &__priority {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  &__copyBtn {
+    border: none;
+    background: url('../public/img/copy.png') center/80% no-repeat;
+    width: 24px;
+    height: 24px;
+
+    &:active {
+      background: url('../public/img/copy.png') center/80% no-repeat, $doneLineColor;
+    }
+  }
+}
+
+.subTask {
+  display: flex;
+  align-items: flex-start;
+  padding: 5px;
+  border-radius: 5px;
+
+  &__title {
+    width: 90%;
+    word-wrap: break-word;
+  }
+
+  &:hover {
+    background-color: $hoverColor;
+  }
+
+  &__header {
+    overflow: hidden;
+    align-items: flex-start;
+    flex:  1 1 auto;
+  }
+
+  &__checkBox {
+    display: flex;
+    align-items: center;
+  }
+
+  &__deleteBtn {
+    border: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: $highPriorityColor;
+    background-color: transparent;
+
+    &:hover {
+      background-color: rgb(110, 110, 110);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+  }
+
+  &__icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    font-style: normal;
+    font-size: 1rem;
+    transform: translateY(-1px);
+  }
+}
+
+.addSubTaskForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &__input {
+    visibility: hidden;
+
+    &_active {
+      visibility: visible;
+    }
+  }
+}
+
+.addTaskModal {
+  flex:  1 1 auto;
+  max-width: 500px;
+}
+
+.addCommentForm {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 12px 0;
+  gap: 12px;
+
+  &__input {
+    flex: 1 1 auto;
+  }
+}
+
+.commentList {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  gap: 8px;
+  // max-height: 400px;
+  padding: 0 8px 0 0;
+}
+
+.comment {
+  padding: 8px 0 8px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 100%;
+    background-color: $hoverColor;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+
+  &__dateCreated {
+    @include date;
+    text-align: right;
+  }
+
+  &__body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  &__text {
+    flex: 1 1 auto;
+    width: 90%;
+    word-wrap: break-word;
+  }
+
+  &__deleteBtn {
+    border: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: $highPriorityColor;
+    background-color: transparent;
+
+    &:hover {
+      background-color: rgb(110, 110, 110);
+    }
+  }
+  
+  &__icon {
+    color: $highPriorityColor;
+    width: 20px;
+    height: 20px;
+    display: block;
+    font-style: normal;
+    font-size: 1rem;
+    transform: translateY(-1px);
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  &__addBtn {
+    font-size: 0.9rem;
+    opacity: 0.5;
+    text-decoration: underline;
+  }
+}
+
+.search {
+  position: relative;
+
+  &__input {
+    min-width: 250px;
+  }
+
+  &__result {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    background-color: $containerBackground;
+    position: absolute;
+    padding: 5px;
+    top: 100%;
+    left: 0;
+    z-index: 50;
+    border: 1px solid $hoverColor;
+    visibility: hidden;
+
+    &_active {
+      visibility: visible;
+    }
+  }
+}
+
+.shortTask {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: $hoverColor;
+  width: 238px;
+  cursor: pointer;
+
+  &__section {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    column-gap: 5px;
+    align-items: center;
+  }
+
+  &__textOverflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: calc(238px - 90px - 20px);
+  } 
+}
+
+
+@media (max-width: 1200px) {
+  .header {
+    padding: 5px 10px;
+  }
+
+  .main {
+    padding: 10px;
+  }
+
+  html {
+    font-size: 14px;
+  }
+  .tasks {
+    &__lists {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      align-items: center;
+    }
+  }
+
+  .taskList {
+    max-width: 500px;
+    width: 100%;
+
+    &__body {
+      padding: 5px;
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    visibility: hidden;
+    transform: translateX(-110%);
+
+    &_active {
+      visibility: visible;
+      transform: translateX(0);
+
+      .menu__closeBtn {
+        visibility: visible;
+        opacity: 1;
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    &__nav {
+      background-color: $containerBackground;
+    }
+  }
+}
+
+@media (max-width: 540px) {
+  .projects {
+    align-items: flex-start;
+
+    &__item {
+      margin: 0 0 10px 0;
+    }
+
+    &__list {
+      background-color: transparent;
+      padding: 5px;
+      min-width: 300px;
+      width: 100%;
+    }
+  }
+}
