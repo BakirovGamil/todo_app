@@ -6,6 +6,8 @@ import { generateID } from '../../lib/todo';
 import Button from '../UI/button/Button';
 import Priority from './Priority';
 
+const tinymceApiKey = process.env.tinyMceApiKey;
+
 interface TaskProps {
   initTask: ITask,
   onSave: (resultTask: ITask) => void; 
@@ -60,7 +62,7 @@ const TaskForm: FC<TaskProps> = ({ initTask, onSave }) => {
       <div className="taskForm__section">
         <div className="taskForm__title">Описание</div>
         <Editor
-          apiKey='7t30sehtuuwc12sv08futsmbafo1dr3h65qck5l7ftg4jehr'
+          apiKey={tinymceApiKey}
           onInit={(evt, editor) => editorRef.current = editor}
           initialValue={initTask.desription}
           init={{

@@ -4,6 +4,8 @@ import { useSubtasks } from '../../hooks/useSubtasks';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import AddCommentForm from '../comment/AddCommentForm';
 import CommentList from '../comment/CommentList';
+import File from '../file/File';
+import FileUploader from '../file/FileUploader';
 import AddSubTaskForm from '../subTasks/AddSubTaskForm';
 import SubTask from '../subTasks/SubTask';
 import Button from '../UI/button/Button';
@@ -62,6 +64,28 @@ const TaskModal: FC = () => {
               <Priority task={task} isText/>
             </div>
           </div>
+          {
+            task?.timeCompletion &&
+            <div className="taskModal__section">
+            <div className="taskModal__title">
+              Время выполнения:
+            </div>
+            <div className="taskModal__content">
+              {`${task.timeCompletion} минут` }
+            </div>
+          </div>
+          }
+          {
+            task?.dateCompletion &&
+            <div className="taskModal__section">
+            <div className="taskModal__title">
+              Дата завершения:
+            </div>
+            <div className="taskModal__content">
+              {task.dateCompletion.format('DD.MM:YYYY HH:mm')}
+            </div>
+          </div>
+          }
           <div className="taskModal__section">
             <div className="taskModal__title">
               Подзадачи
@@ -69,6 +93,19 @@ const TaskModal: FC = () => {
             <div className="taskModal__content taskModal__subTasks">
               {subTasks.map((subTask) => <SubTask key={subTask.id} subTask={subTask}/>)}
               <AddSubTaskForm task={task}/>
+            </div>
+          </div>
+          <div className="taskModal__section">
+            <div className="taskModal__title">
+              Файлы
+            </div>
+            <div className="taskModal__content taskModal__files">
+              <FileUploader/>
+              <div className="taskModal__fileList">
+                {
+                  task.files.map((file) => <File key={file.id} file={file}/>)
+                }
+              </div>
             </div>
           </div>
           <div className="taskModal__section">

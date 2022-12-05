@@ -300,6 +300,8 @@ html, body, #root, .App {
 }
 
 .task {
+  display: flex;
+  flex-direction: column;
   background-color: $containerBackground;
   box-shadow: 0 2px 5px -4px $hoverColor;
   border-radius: 2px;
@@ -327,6 +329,7 @@ html, body, #root, .App {
   }
 
   &__description {
+    flex:  1 1 auto;
     padding: 10px 8px;
     > * {
       white-space: nowrap;
@@ -416,7 +419,7 @@ html, body, #root, .App {
 .taskModal {
   max-width: 500px;
   flex: 1 1 auto;
-  overflow: auto;
+  overflow-y: auto;
 
 
   &__body {
@@ -446,6 +449,8 @@ html, body, #root, .App {
   }
 
   &__description {
+    word-wrap: break-word;
+    
     ol, ul {
       margin: 0 0 0 20px;
     }
@@ -466,6 +471,14 @@ html, body, #root, .App {
     &:active {
       background: url('../public/img/copy.png') center/80% no-repeat, $doneLineColor;
     }
+  }
+
+  &__fileList {
+    padding: 5px 0 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 68px);
+    gap: 5px;
+    justify-items: center;
   }
 }
 
@@ -702,6 +715,59 @@ html, body, #root, .App {
   }
 }
 
+.file {
+  cursor: pointer;
+  background-color: $hoverColor;
+  padding: 3px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  position: relative;
+
+  &__img {
+    width: 24px;
+    height: 24px;
+    background: url('../public/img/file.png') center/cover no-repeat;
+  }
+
+  &__name {
+    text-align: center;
+    height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 60px;
+    word-wrap: break-word;
+
+    &:hover {
+      + .file__nameTip {
+        display: block;
+      }
+    }
+  }
+
+  &__nameTip {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 50%;
+    background-color: rgb(255, 167, 44);
+    padding: 3px;
+    border-radius: 5px;
+    word-wrap: break-word;
+    width: 200px;
+  }
+
+  &__link {
+    display: none; 
+  }
+}
+
+.addFileBtn {
+  width: 100%;
+}
 
 @media (max-width: 1200px) {
   .header {

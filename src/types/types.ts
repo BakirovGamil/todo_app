@@ -12,14 +12,24 @@ export enum TaskPriority {
   high
 }
 
+export interface IFile {
+  id: string,
+  name: string,
+  url: string,
+  handle: string
+}
+
 export interface ITask {
   id: string,
   projectId: string,
   title: string,
   desription: string,
   dateCreated: Moment,
+  dateCompletion?: Moment,
+  timeCompletion?: number,
   status: TaskStatus,
-  priority: TaskPriority
+  priority: TaskPriority,
+  files: IFile[]
 }
 
 export enum TaskListTypes {

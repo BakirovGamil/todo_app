@@ -22,7 +22,8 @@ const AddTaskForm: FC<AddTaskProps> = ({ taskStatus = TaskStatus.queue, setIsVis
     desription: '',
     dateCreated: moment(),
     priority: TaskPriority.low,
-    status: taskStatus
+    status: taskStatus,
+    files: []
   });
 
   const onSave = (resultTask: ITask) => {

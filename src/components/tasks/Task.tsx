@@ -1,8 +1,9 @@
 import { FC, MouseEvent, useMemo, useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import { useTaskActions } from '../../hooks/useActions';
+import { useCommentActions, useProjectActions, useSubTaskActions, useTaskActions } from '../../hooks/useActions';
 import { useSubtasks } from '../../hooks/useSubtasks';
-import { ITask } from '../../types/types';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import { ITask, TaskStatus } from '../../types/types';
 import DropDown from '../UI/drop-down/DropDown';
 import Modal from '../UI/modal/Modal';
 import EditTaskForm from './EditTaskForm';
@@ -35,6 +36,26 @@ const Task: FC<TaskProps> = ({ task, index }) => {
     setIsVisibleEditModal(false);
   };
 
+  const {deleteTask} = useTaskActions();
+  const {setTaskIds} = useProjectActions();
+  const {deleteSubTasksTask} = useSubTaskActions();
+  const {deleteCommentsTask}= useCommentActions();
+  const projects = useTypedSelector((state) => state.projects.projects);
+  const onDelete = () => {
+    const projectId = task.projectId;
+    const taskIds = projects[projectId].taskIds;
+    const newTaskIds = taskIds.filter((taskId) => taskId !== task.id);
+    setTaskIds(projectId, newTaskIds);
+    deleteTask(task.id);
+    deleteSubTasksTask(task.id);
+    deleteCommentsTask(task.id);
+  };
+
+  const {changeTaskStatus} = useTaskActions();
+  const onChangeStatus = (taskStatus: TaskStatus) => {
+    changeTaskStatus(task.id, taskStatus);
+  };
+
   return (
     <Draggable draggableId={task.id} index={index}>
       {(provided) => {
@@ -51,6 +72,10 @@ const Task: FC<TaskProps> = ({ task, index }) => {
                 </Modal>
                 <DropDown>
                   <button className="editTask__btn" onClick={() => openEditModal()}>Изменить</button>
+                  <button className="editTask__btn" onClick={() => onChangeStatus(TaskStatus.queue)}>В очередь</button>
+                  <button className="editTask__btn" onClick={() => onChangeStatus(TaskStatus.development)}>В работе</button>
+                  <button className="editTask__btn" onClick={() => onChangeStatus(TaskStatus.done)}>Выполнено</button>
+                  <button className="editTask__btn" onClick={() => onDelete()}>Удалить</button>
                 </DropDown>
                 <div className="task__drag" {...provided.dragHandleProps} onClick={(e) => e.stopPropagation()}>
                 </div>

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { getDataLocalStorage } from '../../lib/todo';
 import { ProjectAction, ProjectActionTypes, ProjectState } from '../../types/project';
 
@@ -22,9 +23,11 @@ export const projectReducer = (state = initialState, action: ProjectAction) => {
       }; 
     case ProjectActionTypes.ADD_TASK_TO_PROJECT:
       const { projectId, taskId } = action.payload;
-      const project = state.projects[projectId];
+      const project ={...state.projects[projectId]};
+      project.dateEdited = moment();
       const taskIds = [...project.taskIds];
       taskIds.unshift(taskId);
+
       return {
         ...state, 
         projects: {
@@ -36,7 +39,8 @@ export const projectReducer = (state = initialState, action: ProjectAction) => {
       return {...state, selectedProjectId: action.payload};
     case ProjectActionTypes.SET_TASK_IDS: {
       const {projectId, taskIds} = action.payload;
-      const project = state.projects[projectId];
+      const project = {...state.projects[projectId]};
+      project.dateEdited = moment();
 
       return {
         ...state,
@@ -63,6 +67,7 @@ export const projectReducer = (state = initialState, action: ProjectAction) => {
     }
     case ProjectActionTypes.EDIT_PROJECT: {
       const {project} = action.payload;
+      project.dateEdited = moment();
 
       return {
         ...state,
