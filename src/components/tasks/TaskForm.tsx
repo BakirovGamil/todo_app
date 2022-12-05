@@ -6,7 +6,7 @@ import { generateID } from '../../lib/todo';
 import Button from '../UI/button/Button';
 import Priority from './Priority';
 
-const tinymceApiKey = process.env.TINYMCE_KEY;
+const tinymceApiKey = '7t30sehtuuwc12sv08futsmbafo1dr3h65qck5l7ftg4jehr';
 
 interface TaskProps {
   initTask: ITask,
