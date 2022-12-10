@@ -32,6 +32,10 @@ const Modal: FC<ModalProps> = ({ title, isVisible, setIsVisible, children, prelo
   const containerClassName = [cls.container];
   if(className) containerClassName.push(className);
 
+  const onClose = () => {
+    setIsVisible(false);
+  };
+
   const layout = (
     <div className={modalClassName.join(' ')} onMouseDown={() => closeModal()} onClick={(e) => e.stopPropagation()}>
       <div className={containerClassName.join(' ')} onClick={e => e.stopPropagation()} onMouseDown={(e) => e.stopPropagation()}>
@@ -40,6 +44,9 @@ const Modal: FC<ModalProps> = ({ title, isVisible, setIsVisible, children, prelo
             {title}
           </div>
         }
+        <button className={cls.btn} onClick={onClose}>
+          <i className={cls['close-icon']}></i>
+        </button>
         <div className={cls.body}>
           {children}
         </div>

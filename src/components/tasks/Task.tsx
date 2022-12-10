@@ -71,6 +71,7 @@ const Task: FC<TaskProps> = ({ task, index }) => {
                   <EditTaskForm task={task} onEdit={onEdit}/>
                 </Modal>
                 <DropDown>
+                  <button className="editTask__btn" onClick={() => setSelectedTaskId(task.id)}>Открыть</button>
                   <button className="editTask__btn" onClick={() => openEditModal()}>Изменить</button>
                   <button className="editTask__btn" onClick={() => onChangeStatus(TaskStatus.queue)}>В очередь</button>
                   <button className="editTask__btn" onClick={() => onChangeStatus(TaskStatus.development)}>В работе</button>

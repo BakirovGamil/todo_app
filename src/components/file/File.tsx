@@ -28,9 +28,6 @@ const File: FC<FileProps> = ({file}) => {
       <div className="file__name">
         {file.name}
       </div>
-      <div className="file__nameTip">
-          {file.name}
-      </div>
       <button onClick={onDelete} className="file__deleteBtn">
         <i className="subTask__icon">
           &#10006;

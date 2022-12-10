@@ -34,6 +34,8 @@ const TaskModal: FC = () => {
     navigator.clipboard.writeText(task.id);
   };
 
+  
+
   return (
     <Modal title={task?.title} isVisible={isVisible} setIsVisible={onCloseModal} className="taskModal">
       { task &&
@@ -65,10 +67,10 @@ const TaskModal: FC = () => {
             </div>
           </div>
           {
-            task?.timeCompletion &&
+            (Boolean(task.timeCompletion) || task.timeCompletion === 0) &&
             <div className="taskModal__section">
             <div className="taskModal__title">
-              Время выполнения:
+              Время в работе:
             </div>
             <div className="taskModal__content">
               {`${task.timeCompletion} минут` }
